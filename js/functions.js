@@ -1,29 +1,17 @@
 /*
-Иван, добрый день! Подскажите, такой вариант первой функции будет верный? :
-const getLengthCheck = (string, maxLength) => { (string.length <= maxLength) ? true : false};
-Проверял в консоли Chrome и всегда возвращалось "undefined".
-Работало только так: const getLengthCheck = (string, maxLength) => { (string.length <= maxLength) ? console.log(true) : console.log(false)};
+  Иван, спасибо за подробные комментарии!
 */
 //Функция для проверки длины строки:
-const getLengthCheck = (string, maxLength) => {
-  if (string.length <= maxLength) {
-    return true;
-  }
-  return false;
-}
+const getLengthCheck = (string, maxLength) => string.length <= maxLength;
 
 //Функця для проверки, является ли строка палинтромом + случай, когда в строке встречаются пробелы:
-const getpalindromCheck = (string) => {
-  let newString = string.toLowerCase();
-    newString = newString.replaceAll(' ', '');
+const isPalindrome = (string) => {
+  const modifiedString = string.toLowerCase().replaceAll(' ', '');
   let mirrorString = '';
-    for (i = newString.length - 1; i >= 0; i--) {
-      mirrorString += newString[i];
+    for (let i = modifiedString.length - 1; i >= 0; i--) {
+      mirrorString += modifiedString[i];
     }
-  if (newString === mirrorString) {
-   return true;
-  }
-  return false;
+  return modifiedString === mirrorString;
 }
 
 /*
@@ -31,16 +19,8 @@ const getpalindromCheck = (string) => {
 в виде целого положительного числа. Если в строке нет ни одной цифры, функция должна вернуть NaN
 + случай, когда вместо строки приходит число:
 */
-const getNumber = (data) => {
-  const string = String(data);
-  let newString = string.replace(/[^0-9]/g, '');
-  if (newString.length == 0) {
-    newString = NaN;
-    return newString;
-  }
-  newString = Number(newString);
-  return newString;
-}
+
+const getNumber = (data) => parseInt(String(data).replace(/[^0-9]/g, ''), 10);
 
 /*
 Функция, которая принимает три параметра: исходную строку, минимальную длину и строку
@@ -49,20 +29,19 @@ const getNumber = (data) => {
 Если «добивка» слишком длинная, она обрезается с конца.
 */
 
-const getadress = (text, minLength, addcharacters) => {
+const getAdress = (text, minLength, addCharacters) => {
   if (text.length < minLength) {
     const quality = minLength - text.length;
     let characters = '';
     let j = 0;
-    while (quality > addcharacters.length + j) {
-      characters += addcharacters[0];
+    while (quality > addCharacters.length + j) {
+      characters += addCharacters[0];
       j++;
     }
     for (let i = 0; i < quality - j; i++) {
-      characters += addcharacters[i];
+      characters += addCharacters[i];
     }
-    const result = characters + text;
-    return result;
+    return characters + text;
   }
   return text;
 }
