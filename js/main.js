@@ -81,3 +81,4 @@ const getRandomNum = (min, max) => {
   const result = Array.from({length: 25}, createObject);
 
   console.log(result);
+
