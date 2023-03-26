@@ -1,13 +1,46 @@
-// Массив с описанием фото
-const DESCRIPTION = ['Описание 1','Описание 2','Описание 3','Описание 4','Описание 5','Описание 6','Описание 7','Описание 8',
-'Описание 9','Описание 10','Описание 11','Описание 12','Описание 13','Описание 14','Описание 15','Описание 16','Описание 17',
-'Описание 18','Описание 19','Описание 20','Описание 21','Описание 22','Описание 23','Описание 24','Описание 25'];
+const PHOTOS_COUNT = 25;
+const AVATAR_COUNT = 6;
+const MIN_COMMENT_ID = 1;
+const MAX_COMMENT_ID = 1000;
+const MIN_COMMENTS_COUNT = 1;
+const MAX_COMMENTS_COUNT = 4;
+const MIN_LIKES_COUNT = 15;
+const MAX_LIKES_COUNT = 200;
+
+// Описания поправлю чуть позже
+const DESCRIPTIONS = [
+  'Описание 1',
+  'Самая короткая дорога на пляж',
+  'Описание 3',
+  'Взял с собой на отдых личного фотографа!',
+  'Оцените мои куоинарные способности! Звезда Мишлена не за горами)',
+  'Какая прекрасная брусчатка!',
+  'Сегодня на диете...',
+  'Описание 8',
+  'Описание 9',
+  'Описание 10',
+  'Отпуск прохолит удачно! Погода прекрасная!',
+  'Решил побаловать себя и взял себе машинку... (в аренду на 2 дня)',
+  'Вкуснятина!!!',
+  'Уже пробовали новый рол Барсик?',
+  'Описание 15',
+  'Возвращатьься домой всегла грустно:(',
+  'Описание 17',
+  'Описание 18',
+  'Лучшие домашние подкрадули!!!',
+  'Описание 20',
+  'Описание 21',
+  'Описание 22',
+  'Описание 23',
+  'Описание 24',
+  'Описание 25'
+];
 
 // Массив с именами комментаторов
-const NAMES_FOR_COMMENTS = ['Морти', 'Рик', 'Влада', 'Ника', 'Арагорн', 'Фродо'];
+const NAMES_OF_COMMENTATORS = ['Морти', 'Рик', 'Влада', 'Ника', 'Арагорн', 'Фродо'];
 
 // Массив с текстами комментариев
-const TEXT_FOR_COMMENTS = [
+const COMMENT_TEXTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -15,18 +48,32 @@ const TEXT_FOR_COMMENTS = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
+// Генератор для я ID и Url
+const createNumberGenerator = () => {
+  let lastGeneratedNumber = 0;
+  return () => ++lastGeneratedNumber;
+  };
+
+const generateId = createNumberGenerator ();
+const generateUrl = createNumberGenerator ();
+const generateDescription = createNumberGenerator ();
+
+const getRandomNumber = (min, max) => {
+  min = Math.ceil(Math.min(min, max));
+  max = Math.floor(Math.max(min, max));
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Генератор ID для комментариев с уникальным значением
 const createRandomIdGenerator = (min, max) => {
-  const previousValues = [];
-
-  return function () {
-    let currentValue = getRandomNum(min, max);
+    const previousValues = [];
+  return () => {
+    let currentValue = getRandomNumber(min, max);
     if (previousValues.length >= (max - min + 1)) {
       return null;
     }
     while (previousValues.includes(currentValue)) {
-      currentValue = getRandomNum(min, max);
+      currentValue = getRandomNumber(min, max);
     }
     previousValues.push(currentValue);
     return currentValue;
@@ -34,51 +81,22 @@ const createRandomIdGenerator = (min, max) => {
 }
 
 const createComment = () => ({
-    id: getRandomNum(1, 1000),
-    avatar: getRandomNum(1, 6), // 'img/avatar-' + getRandomNum(1, 6) + '.svg' по заданию не понял какой вариант верный
-    message: TEXT_FOR_COMMENTS[getRandomNum(0, TEXT_FOR_COMMENTS.length -1)],
-    name: NAMES_FOR_COMMENTS[getRandomNum(0, NAMES_FOR_COMMENTS.length -1)]
+    id: createRandomIdGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
+    avatar: `img/avatar-${getRandomNumber(1, AVATAR_COUNT)}.svg`,
+    message: COMMENT_TEXTS[getRandomNumber(0, COMMENT_TEXTS.length -1)],
+    name: NAMES_OF_COMMENTATORS[getRandomNumber(0, NAMES_OF_COMMENTATORS.length -1)]
   });
 
-// генератор случайного кол-ва комментариев под каждым фото
-const commentsGenerator= () => {
-  const COMMENTS_FOR_PHOTO = [];
-    let i = 0;
-    let numberOfComments = getRandomNum(1, 4);
-    while (i < numberOfComments) {
-      COMMENTS_FOR_PHOTO.push(createComment());
-        i++
-  }
-        return COMMENTS_FOR_PHOTO;
+const createComments = (length) => {
+  return Array.from({length}, createComment());
 }
+//const comments = createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)); ???
 
-// Генератор для я ID и Url
-const createNumGenerator = () => {
-  let lastGeneratedNum = 0;
-  return function () {
-    lastGeneratedNum += 1;
-    return lastGeneratedNum;
-  };
-}
-const generateId = createNumGenerator ();
-const generateUrl = createNumGenerator ();
-const generateDescription = createNumGenerator ();
-
-const getRandomNum = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-  const createObject = () => ({
+  const createPhoto = () => ({
     id: generateId(),
-    url: generateUrl(),  // 'photos/' + generateUrl() + '.jpg' по заданию не понял какой вариант верный
-    description: DESCRIPTION[generateDescription() - 1],
-    likes: getRandomNum(15, 200),
-    comments: commentsGenerator()
+    url: `photos/{generateUrl}.jpg`,
+    likes: getRandomNumber(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
+    comments: createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT))
   })
 
-  const result = Array.from({length: 25}, createObject);
-
-  console.log(result);
-
+  const createPhotos = (length) => Array.from({length}, createPhoto);
