@@ -7,15 +7,16 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 const renderPhotos = (photos) => {
   const simularPhotoList = document.createDocumentFragment();
 
-  photos.forEach(({url, likes, comments}) => {
+  photos.forEach(({url, likes, comments, id}) => {
     const photoElement = pictureTemplate.cloneNode(true);
     photoElement.querySelector('.picture__img').src = url;
     photoElement.querySelector('.picture__likes').textContent = likes;
     photoElement.querySelector('.picture__comments').textContent = comments.length;
+    photoElement.dataset.photoId = id;
     simularPhotoList.appendChild(photoElement);
   });
 
   galery.appendChild(simularPhotoList);
 };
 
-export {renderPhotos};
+export {renderPhotos, galery};
