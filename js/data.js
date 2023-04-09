@@ -58,8 +58,9 @@ const createComment = () => ({
 });
 
 const createComments = (length) => {
-return Array.from({length}, createComment);
-}
+  return Array.from({length}, createComment);
+};
+
 //const comments = createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)); ???
 
 const createPhoto = () => ({
