@@ -1,8 +1,7 @@
-
+import { showBigPhoto } from './util-galery.js';
 
 const galery = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-
 
 const renderPhotos = (photos) => {
   const simularPhotoList = document.createDocumentFragment();
@@ -18,5 +17,20 @@ const renderPhotos = (photos) => {
 
   galery.appendChild(simularPhotoList);
 };
+//задание 8.1
+const renderGalery = (photos) => {
+  galery.addEventListener('click', (evt) => {
+    const thumbnail = evt.target.closest('[data-photo-id]');
+    if (!thumbnail) {
+      return;
+    }
+    const photo = photos.find((item) => item.id === +thumbnail.dataset.photoId);
 
-export {renderPhotos, galery};
+    showBigPhoto(photo);
+  });
+
+  //renderPhotos(photos);
+};
+
+
+export {renderGalery, renderPhotos};
