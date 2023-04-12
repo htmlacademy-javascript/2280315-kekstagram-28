@@ -1,7 +1,8 @@
 
 import {createPhotos, PHOTOS_COUNT} from './data.js';
-import {renderPhotos} from './miniatures.js';
+import {renderGalery} from './galery.js';
 
 const photos = createPhotos(PHOTOS_COUNT);
 
-renderPhotos(photos);
+//renderPhotos(photos);
+renderGalery(photos);
