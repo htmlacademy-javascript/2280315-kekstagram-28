@@ -4,5 +4,5 @@ import {renderPhotos, renderGalery} from './galery.js';
 
 const photos = createPhotos(PHOTOS_COUNT);
 
-renderPhotos(photos);
+//renderPhotos(photos);
 renderGalery(photos);

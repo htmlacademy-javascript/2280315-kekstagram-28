@@ -17,7 +17,7 @@ const renderPhotos = (photos) => {
 
   galery.appendChild(simularPhotoList);
 };
-//задание 8.1
+
 const renderGalery = (photos) => {
   galery.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('[data-photo-id]');
@@ -29,7 +29,7 @@ const renderGalery = (photos) => {
     showBigPhoto(photo);
   });
 
-  //renderPhotos(photos);
+  renderPhotos(photos);
 };
 
 

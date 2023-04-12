@@ -4,8 +4,8 @@ const PHOTOS_COUNT = 25;
 const AVATAR_COUNT = 6;
 const MIN_COMMENT_ID = 1;
 const MAX_COMMENT_ID = 1000;
-const MIN_COMMENTS_COUNT = 1;
-const MAX_COMMENTS_COUNT = 4;
+const MIN_COMMENTS_COUNT = 2;
+const MAX_COMMENTS_COUNT = 15;
 const MIN_LIKES_COUNT = 15;
 const MAX_LIKES_COUNT = 200;
 
@@ -57,11 +57,8 @@ const createComment = () => ({
   name: NAMES_OF_COMMENTATORS[getRandomNumber(0, NAMES_OF_COMMENTATORS.length - 1)]
 });
 
-const createComments = (length) => {
-  return Array.from({length}, createComment);
-};
+const createComments = (length) => Array.from({length}, createComment);
 
-//const comments = createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)); ???
 
 const createPhoto = () => ({
   id: generateId(),
