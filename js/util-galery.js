@@ -1,17 +1,23 @@
+import { renderPhotos } from "./galery";
 
+const COMMENTS_PER_PORTION = 5;
 const bigPhoto = document.querySelector('.big-picture');
 const commentCounter = bigPhoto.querySelector('.social__comment-count');
 const commentsLoader = bigPhoto.querySelector('.comments-loader');
 const closeButton = bigPhoto.querySelector('.cancel');
 const socialComments = bigPhoto.querySelector('.social__comments');
 
+let numberOfCommentsShown = 0;
+
 const hideBigPhoto = () => {
   bigPhoto.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  commentCounter.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
+  numberOfCommentsShown = 0;
+  //commentCounter.classList.remove('hidden');
+  // commentsLoader.classList.remove('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
   closeButton.removeEventListener('click', onCloseButton);
+  commentsLoader.removeEventListener('click', onCommentsLoaderButton);
 };
 
 function onDocumentKeydown (evt) {
@@ -43,22 +49,47 @@ const createComment = ({avatar, name, message}) => {
   return comment;
 };
 
+
 const renderComments = (comments) => {
+
+  numberOfCommentsShown += COMMENTS_PER_PORTION;
   socialComments.innerHTML = '';
+
+  if (numberOfCommentsShown >= comments.length) {
+    commentsLoader.classList.add('hidden');
+    numberOfCommentsShown = comments.length;
+  } else {
+    commentsLoader.classList.remove('hidden');
+    commentsLoader.addEventListener('click', onCommentsLoaderButton);
+  }
   const fragment = document.createDocumentFragment();
 
-  comments.forEach((comment) => {
-    fragment.append(createComment(comment));
-  });
+  for (let i = 0; i < numberOfCommentsShown; i++) {
+    fragment.append(createComment(comments[i]));
+  }
 
   socialComments.append(fragment);
+  commentCounter.innerHTML =`${numberOfCommentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
+
+  // socialComments.innerHTML = '';
+  // const fragment = document.createDocumentFragment();
+
+  // comments.forEach((comment) => {
+  //   fragment.append(createComment(comment));
+  // });
+
+  // socialComments.append(fragment);
 };
+
+function onCommentsLoaderButton () {
+  renderComments(modal.comments);
+}
 
 const showBigPhoto = (modal) => {
   bigPhoto.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  commentCounter.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  // commentCounter.classList.add('hidden');
+  // commentsLoader.classList.add('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
   closeButton.addEventListener('click', onCloseButton); // пока не понимаю где удалять эти обработчики..
 
