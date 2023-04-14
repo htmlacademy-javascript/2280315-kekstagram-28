@@ -1,4 +1,3 @@
-import { renderPhotos } from "./galery";
 
 const COMMENTS_PER_PORTION = 5;
 const bigPhoto = document.querySelector('.big-picture');
@@ -17,7 +16,9 @@ const hideBigPhoto = () => {
   // commentsLoader.classList.remove('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
   closeButton.removeEventListener('click', onCloseButton);
-  commentsLoader.removeEventListener('click', onCommentsLoaderButton);
+  commentsLoader.removeEventListener('click', onCommentsLoaderButton); //
+  // console.log(numberOfCommentsShown);
+
 };
 
 function onDocumentKeydown (evt) {
@@ -60,8 +61,8 @@ const renderComments = (comments) => {
     numberOfCommentsShown = comments.length;
   } else {
     commentsLoader.classList.remove('hidden');
-    commentsLoader.addEventListener('click', onCommentsLoaderButton);
   }
+
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < numberOfCommentsShown; i++) {
@@ -69,20 +70,12 @@ const renderComments = (comments) => {
   }
 
   socialComments.append(fragment);
-  commentCounter.innerHTML =`${numberOfCommentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
-
-  // socialComments.innerHTML = '';
-  // const fragment = document.createDocumentFragment();
-
-  // comments.forEach((comment) => {
-  //   fragment.append(createComment(comment));
-  // });
-
-  // socialComments.append(fragment);
+  commentCounter.innerHTML = `${numberOfCommentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
+  //console.log(numberOfCommentsShown);
 };
 
-function onCommentsLoaderButton () {
-  renderComments(modal.comments);
+function onCommentsLoaderButton (data) { // не могу придумать подходящее имя пораметру
+  renderComments(data);
 }
 
 const showBigPhoto = (modal) => {
@@ -91,10 +84,19 @@ const showBigPhoto = (modal) => {
   // commentCounter.classList.add('hidden');
   // commentsLoader.classList.add('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
-  closeButton.addEventListener('click', onCloseButton); // пока не понимаю где удалять эти обработчики..
+  closeButton.addEventListener('click', onCloseButton);
 
   renderPhotoDetails(modal);
   renderComments(modal.comments);
+  commentsLoader.addEventListener('click', () => onCommentsLoaderButton(modal.comments));
+
 };
 
 export {showBigPhoto};
+/*
+  Не могу понять почему работает неправильно. Когда открываешь любое первое фото, то все работает правильно,
+  но потом перестает отображать комменты порциями. Допустим, открываю фото с 14-ю комментариями, значение
+  переменной numberOfCommentsShown = 5. Нажимаю на кнопку, становится равной 10, и так далее до длины массива.
+  При закрытии numberOfCommentsShown обнуляется, а далее непонятно: Открываю другое фото, также numberOfCommentsShown сначала 5, а после клика пееменная
+  не увеличивается на 5, а принимает значения с предыдущей фотки и только потом плюсует пятерку (Если не дотягивает до длины массива )
+ */
