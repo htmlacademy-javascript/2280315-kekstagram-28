@@ -7,18 +7,15 @@ const closeButton = bigPhoto.querySelector('.cancel');
 const socialComments = bigPhoto.querySelector('.social__comments');
 
 let numberOfCommentsShown = 0;
+let onCommentsLoaderButton;
 
 const hideBigPhoto = () => {
   bigPhoto.classList.add('hidden');
   document.body.classList.remove('modal-open');
   numberOfCommentsShown = 0;
-  //commentCounter.classList.remove('hidden');
-  // commentsLoader.classList.remove('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
   closeButton.removeEventListener('click', onCloseButton);
-  commentsLoader.removeEventListener('click', onCommentsLoaderButton); //
-  // console.log(numberOfCommentsShown);
-
+  commentsLoader.removeEventListener('click', onCommentsLoaderButton);
 };
 
 function onDocumentKeydown (evt) {
@@ -50,9 +47,7 @@ const createComment = ({avatar, name, message}) => {
   return comment;
 };
 
-
 const renderComments = (comments) => {
-
   numberOfCommentsShown += COMMENTS_PER_PORTION;
   socialComments.innerHTML = '';
 
@@ -71,32 +66,18 @@ const renderComments = (comments) => {
 
   socialComments.append(fragment);
   commentCounter.innerHTML = `${numberOfCommentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
-  //console.log(numberOfCommentsShown);
 };
-
-function onCommentsLoaderButton (data) { // не могу придумать подходящее имя пораметру
-  renderComments(data);
-}
 
 const showBigPhoto = (modal) => {
   bigPhoto.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  // commentCounter.classList.add('hidden');
-  // commentsLoader.classList.add('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
   closeButton.addEventListener('click', onCloseButton);
 
   renderPhotoDetails(modal);
   renderComments(modal.comments);
-  commentsLoader.addEventListener('click', () => onCommentsLoaderButton(modal.comments));
-
+  onCommentsLoaderButton = () => renderComments(modal.comments);
+  commentsLoader.addEventListener('click', onCommentsLoaderButton); // Спасибо! Решил выбрать первый вариант
 };
 
 export {showBigPhoto};
-/*
-  Не могу понять почему работает неправильно. Когда открываешь любое первое фото, то все работает правильно,
-  но потом перестает отображать комменты порциями. Допустим, открываю фото с 14-ю комментариями, значение
-  переменной numberOfCommentsShown = 5. Нажимаю на кнопку, становится равной 10, и так далее до длины массива.
-  При закрытии numberOfCommentsShown обнуляется, а далее непонятно: Открываю другое фото, также numberOfCommentsShown сначала 5, а после клика пееменная
-  не увеличивается на 5, а принимает значения с предыдущей фотки и только потом плюсует пятерку (Если не дотягивает до длины массива )
- */
